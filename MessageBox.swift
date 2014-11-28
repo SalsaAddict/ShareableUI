@@ -1,5 +1,17 @@
 import UIKit
+/*
+func showPopup(sender: UIButton)
+{
+    MessageBox(title: "Test", message: "This is a test").show(self)
+    
+}
 
+func showPopup00(sender: UIButton)
+{
+    let m = MessageBox(title: "Test", message: "This is a test!", hasCancelButton: true)// , autoDismissSecs: 5)
+    m.show(self, { (result) in if result == "OK" { self.doOK() } else { self.doCancel() } } )
+}
+*/
 class MessageBox: NSObject {
     
     private var m_popup: UIAlertController?
