@@ -60,3 +60,51 @@ class MessageBox: NSObject {
     }
     
 }
+
+/*
+LoginBox().show(self, {
+    (cancel, username, password) in
+    if cancel {
+        println("Login cancelled")
+    }
+    else {
+        println("Login Username = \(username!) Password = \(password!)")
+    }
+})
+*/
+class LoginBox: NSObject {
+    
+    private var m_popup: UIAlertController?
+    private var m_closure: ((Bool,String?,String?) -> ())?
+
+    init(title: String? = "Login", message: String? = "Please enter your login details") {
+        super.init()
+        m_popup = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.Alert)
+        m_popup?.addTextFieldWithConfigurationHandler({ (textField) -> Void in
+            textField.placeholder = "Username"
+        })
+        m_popup?.addTextFieldWithConfigurationHandler({ (textField) -> Void in
+            textField.placeholder = "Password"
+            textField.secureTextEntry = true
+        })
+        m_popup?.addAction(UIAlertAction(title: "Login", style: UIAlertActionStyle.Default, handler: {(action) in self.doClosure(false)} ))
+        m_popup?.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Destructive, handler: {(action) in self.doClosure(true)} ))
+    }
+    
+    func show(parentViewController: UIViewController, closure: ((Bool,String?,String?) -> ())) {
+        parentViewController.presentViewController(m_popup!, animated: true, completion: nil)
+        m_closure = closure
+    }
+    
+    private func doClosure(cancel: Bool) {
+        if cancel {
+            m_closure!(true, nil, nil)
+        }
+        else {
+            var username: UITextField = m_popup?.textFields![0] as UITextField
+            var password: UITextField = m_popup?.textFields![1] as UITextField
+            m_closure!(false, username.text, password.text)
+        }
+    }
+    
+}
