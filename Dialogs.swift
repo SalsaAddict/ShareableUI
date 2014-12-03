@@ -108,3 +108,41 @@ class LoginBox: NSObject {
     }
     
 }
+
+class ProgressBox: NSObject {
+    
+    private var m_popup: UIAlertController?
+    private var m_progressView: UIProgressView?
+    private var m_progress: UInt?
+    
+    init(title: String) {
+        super.init()
+        m_popup = UIAlertController(title: title, message: "", preferredStyle: UIAlertControllerStyle.Alert)
+        m_progressView = UIProgressView(progressViewStyle: UIProgressViewStyle.Bar)
+    }
+    
+    func show(parentViewController: UIViewController, onCancel: (() -> ())? = nil) {
+        if onCancel != nil {
+            m_popup!.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Cancel, handler: { (action) in onCancel!() }))
+        }
+        parentViewController.presentViewController(m_popup!, animated: true, completion: {
+            self.m_progressView!.frame = CGRect(x: 10, y: 65, width: self.m_popup!.view.frame.width - 20, height: 10)
+            self.progress = 0
+            self.m_popup!.view.addSubview(self.m_progressView!)
+        })
+    }
+    
+    var progress: UInt? {
+        didSet {
+            self.m_popup?.message = progress!.description + "%"
+            self.m_progressView?.setProgress(Float(progress!) / Float(100), animated: true)
+        }
+    }
+
+    func close() {
+        if (m_popup!.isViewLoaded()) { m_popup!.dismissViewControllerAnimated(true,  nil) }
+    }
+
+}
+
+
